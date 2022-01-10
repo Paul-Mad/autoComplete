@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import './Autocomplete.css';
+import AutoComplete from './AutoComplete';
 
 const ITEMS_API_URL = 'https://jsonplaceholder.typicode.com/users';
 // const ITEMS_API_URL = 'https://example.com/api/items';
-const DEBOUNCE_DELAY = 500;
 
 // the exported component can be either a function or a class
 
-export default function Autocomplete() {
+export default function SearchList() {
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');
 
@@ -17,34 +16,20 @@ export default function Autocomplete() {
       .then((data) => setList(data));
   }, []);
 
-  const onchangeInput = (e) => {
-    const timer = setTimeout(() => {
-      setSearch(e.target.value);
-    }, DEBOUNCE_DELAY);
-    return () => {
-      clearTimeout(timer);
-    };
-  };
-
   const dataFilter = (el) =>
-    el.name.toLowerCase().match(search.toLowerCase()) && true;
-
+    el.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
   const filteredList = list.filter(dataFilter);
 
   return (
     <div className='pa4 black-80 '>
-      <div className='measure center'>
-        <input
-          type='text'
-          className='input-reset ba b--black-20 pa2 mb2 db w-100'
-          onChange={onchangeInput}
-        />
+      <div className='measure center input'>
+        <AutoComplete suggestions={list} input={search} setInput={setSearch} />
       </div>
       <div className='pa3 pa5-ns'>
         <ul className='list pl0 measure center'>
           {filteredList.map((el) => (
             <li
-              key={Math.random()}
+              key={el.id}
               className='lh-copy pv3 ba bl-0 bt-0 br-0 b--dotted b--black-30'
             >
               {el.name}

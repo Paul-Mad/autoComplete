@@ -1,8 +1,8 @@
-import Autocomplete from './Autocomplete';
+import SearchList from './components/SearchList';
 import './App.css';
 
 function App() {
-  return <Autocomplete />;
+  return <SearchList />;
 }
 
 export default App;
