@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 export default function AutoComplete({ suggestions, input, setInput }) {
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [showSuggestions, setShowSuggestions] = useState(false);
-
+  const DEBOUNCE_DELAY = 500;
   useEffect(() => {
     if (showSuggestions) {
       setShowSuggestions(true);
@@ -10,14 +10,23 @@ export default function AutoComplete({ suggestions, input, setInput }) {
       setShowSuggestions(false);
     }
   }, [showSuggestions]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      input && setInput(filteredSuggestions[activeSuggestion]);
+      setShowSuggestions(false);
+    }, DEBOUNCE_DELAY);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [input]);
 
   const onchangeInput = (e) => {
     setInput(e.target.value);
 
     setShowSuggestions(true);
   };
-  const dataFilter = (el) =>
-    el.name.toLowerCase().indexOf(input.toLowerCase()) > -1;
+  const dataFilter = (el) => el.toLowerCase().indexOf(input.toLowerCase()) > -1;
   const filteredSuggestions = suggestions.filter(dataFilter);
 
   const onKeyDown = (e) => {
@@ -61,7 +70,7 @@ export default function AutoComplete({ suggestions, input, setInput }) {
           }
           return (
             <li className={className} key={index} onClick={onClickSuggestion}>
-              {suggestion.name}
+              {suggestion}
             </li>
           );
         })}

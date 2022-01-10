@@ -23,7 +23,11 @@ export default function SearchList() {
   return (
     <div className='pa4 black-80 '>
       <div className='measure center input'>
-        <AutoComplete suggestions={list} input={search} setInput={setSearch} />
+        <AutoComplete
+          suggestions={list.map((el) => el.name)}
+          input={search}
+          setInput={setSearch}
+        />
       </div>
       <div className='pa3 pa5-ns'>
         <ul className='list pl0 measure center'>
