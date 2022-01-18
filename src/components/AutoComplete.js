@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-export default function AutoComplete({ suggestions, input, setInput }) {
+export default function AutoComplete({ suggestions, setSearch }) {
   const [activeSuggestion, setActiveSuggestion] = useState(0);
+  const [input, setInput] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const DEBOUNCE_DELAY = 500;
   useEffect(() => {
@@ -14,6 +15,7 @@ export default function AutoComplete({ suggestions, input, setInput }) {
     const timer = setTimeout(() => {
       input && setInput(filteredSuggestions[activeSuggestion]);
       setShowSuggestions(false);
+      setSearch(input);
     }, DEBOUNCE_DELAY);
 
     return () => {
@@ -29,35 +31,35 @@ export default function AutoComplete({ suggestions, input, setInput }) {
   const dataFilter = (el) => el.toLowerCase().indexOf(input.toLowerCase()) > -1;
   const filteredSuggestions = suggestions.filter(dataFilter);
 
-  const onKeyDown = (e) => {
-    switch (e.keyCode) {
-      case 13:
-        setInput(filteredSuggestions[activeSuggestion].name);
-        setActiveSuggestion(0);
-        setShowSuggestions(false);
-        return;
-      case 38:
-        if (activeSuggestion === 0) {
-          return;
-        }
-        setActiveSuggestion(activeSuggestion - 1);
-        return;
-      case 40:
-        if (activeSuggestion === filteredSuggestions.length) {
-          return;
-        }
-        setActiveSuggestion(activeSuggestion + 1);
-        return;
-      default:
-        return;
-    }
-  };
+  // const onKeyDown = (e) => {
+  //   switch (e.keyCode) {
+  //     case 13:
+  //       setInput(filteredSuggestions[activeSuggestion].name);
+  //       setActiveSuggestion(0);
+  //       setShowSuggestions(false);
+  //       return;
+  //     case 38:
+  //       if (activeSuggestion === 0) {
+  //         return;
+  //       }
+  //       setActiveSuggestion(activeSuggestion - 1);
+  //       return;
+  //     case 40:
+  //       if (activeSuggestion === filteredSuggestions.length) {
+  //         return;
+  //       }
+  //       setActiveSuggestion(activeSuggestion + 1);
+  //       return;
+  //     default:
+  //       return;
+  //   }
+  // };
 
-  const onClickSuggestion = (e) => {
-    setInput(e.target.innerText);
-    setActiveSuggestion(0);
-    setShowSuggestions(false);
-  };
+  // const onClickSuggestion = (e) => {
+  //   setInput(e.target.innerText);
+  //   setActiveSuggestion(0);
+  //   setShowSuggestions(false);
+  // };
 
   const suggestionsList = showSuggestions ? (
     <div>
@@ -69,7 +71,11 @@ export default function AutoComplete({ suggestions, input, setInput }) {
             className = 'suggestion-active';
           }
           return (
-            <li className={className} key={index} onClick={onClickSuggestion}>
+            <li
+              className={className}
+              key={index}
+              // onClick={onClickSuggestion}
+            >
               {suggestion}
             </li>
           );
@@ -86,7 +92,7 @@ export default function AutoComplete({ suggestions, input, setInput }) {
         type='text'
         className='input-reset ba b--black-20 pa2 mb2 db w-100'
         onChange={onchangeInput}
-        onKeyDown={onKeyDown}
+        // onKeyDown={onKeyDown}
         value={input}
       />
       {showSuggestions && input && suggestionsList}

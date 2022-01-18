@@ -26,7 +26,7 @@ export default function SearchList() {
         <AutoComplete
           suggestions={list.map((el) => el.name)}
           input={search}
-          setInput={setSearch}
+          setSearch={setSearch}
         />
       </div>
       <div className='pa3 pa5-ns'>
